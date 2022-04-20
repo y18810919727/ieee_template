@@ -27,7 +27,7 @@ jobs:
           options: -v ${{ github.workspace }}:/dir:rw
           run: |
             # 此处可以按需替换 old.tex、new.tex
-            latexdiff /dir/original_version.tex /dir/main.tex > /dir/diff.tex
+            latexdiff /dir/old.tex /dir/new.tex > /dir/diff.tex
             echo "Generating diff.tex successfully"
       - name: git add & commit
         run: |
