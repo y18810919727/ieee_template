@@ -1,0 +1,37 @@
+name: Latexdiff
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+#   pull_request:
+#     branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: generating diff.tex
+        uses: addnab/docker-run-action@v3
+        with:
+          image: 18810919727/latex_diff:v1
+          options: -v ${{ github.workspace }}:/dir:rw
+          run: |
+            # 此处可以按需替换 old.tex、new.tex
+            latexdiff /dir/original_version.tex /dir/main.tex > /dir/diff.tex
+            echo "Generating diff.tex successfully"
+      - name: git add & commit
+        run: |
+          # 此处可以键入邮箱及姓名
+          git config --global user.email "b20170324@xs.ustb.edu.cn"
+          git config --global user.name "yuanzhaolin"
+          git add diff.tex
+          git commit -m "update diff"
+          git push -u origin main
